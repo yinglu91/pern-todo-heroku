@@ -9,9 +9,7 @@ const ListTodos = () => {
 
   const deleteTodo = async (id) => {
     try {
-      const deleteTodo = await axios.delete(
-        `http://localhost:5000/todos/${id}`
-      );
+      await axios.delete(`/todos/${id}`);
 
       setTodos(todos.filter((todo) => todo.todo_id !== id));
     } catch (err) {
@@ -22,7 +20,7 @@ const ListTodos = () => {
   useEffect(() => {
     const getTodos = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/todos');
+        const response = await axios.get('/todos');
         console.log(response);
         setTodos(response.data);
       } catch (err) {

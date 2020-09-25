@@ -3,12 +3,24 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const pool = require('./db');
+const path = require('path');
 
 // middleware
 app.use(cors());
 app.use(express.json()); // req.body
 
-// routes
+// process.env.NODE_ENV => production or undefined
+
+app.use(express.static('./client/build'));
+
+if (process.env.NODE_ENV === 'production') {
+  // server static content
+  // cd client && npm run build
+  app.use(express.static(path.join(__dirname, 'client/build')));
+}
+console.log(path.join(__dirname, 'client/build'));
+
+// ROUTES //
 
 // create a todo
 
@@ -34,6 +46,7 @@ app.get('/todos', async (req, res) => {
     const allTodos = await pool.query('SELECT * FROM todo');
 
     res.json(allTodos.rows);
+    console.log(allTodos.rows);
   } catch (err) {
     console.error(err.message);
   }
@@ -84,6 +97,11 @@ app.delete('/todos/:id', async (req, res) => {
   }
 });
 
+// catch all
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client/build/index.html'));
+});
+
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`Server has started on port ${port}.`);
@@ -91,3 +109,6 @@ app.listen(port, () => {
 
 // https://www.youtube.com/watch?v=ldYcgPKEZC8
 // PERN Stack Course - Postgres, Express, React, and Node 3/19/2020
+
+// deploy
+// https://www.youtube.com/watch?v=ZJxUOOND5_A
