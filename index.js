@@ -11,7 +11,7 @@ app.use(express.json()); // req.body
 
 // process.env.NODE_ENV => production or undefined
 
-app.use(express.static('./client/build'));
+// app.use(express.static('./client/build'));
 
 if (process.env.NODE_ENV === 'production') {
   // server static content
